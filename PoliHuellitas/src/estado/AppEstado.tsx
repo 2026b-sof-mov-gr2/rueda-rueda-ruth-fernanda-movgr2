@@ -17,8 +17,14 @@ import {
 import { Usuario, usuarioInicial } from '../data/usuario';
 import { Filtros, filtrosVacios } from '../utils/filtros';
 
+export type Preferencias = { notificaciones: boolean; modoOscuro: boolean };
+
 type AppEstado = {
   usuario: Usuario;
+
+  // Preferencias de Configuración
+  preferencias: Preferencias;
+  cambiarPreferencia: (clave: keyof Preferencias, valor: boolean) => void;
 
   // Catálogo de mascotas (solo lectura: el estudiante no las administra)
   mascotas: Mascota[];
@@ -49,6 +55,10 @@ const AppEstadoContext = createContext<AppEstado | null>(null);
 export function AppEstadoProvider({ children }: { children: ReactNode }) {
   const [usuario] = useState<Usuario>(usuarioInicial);
   const [mascotas] = useState<Mascota[]>(mascotasIniciales);
+  const [preferencias, setPreferencias] = useState<Preferencias>({
+    notificaciones: true,
+    modoOscuro: false,
+  });
   const [busqueda, setBusqueda] = useState('');
   const [filtros, setFiltros] = useState<Filtros>(filtrosVacios);
   const [favoritos, setFavoritos] = useState<string[]>(favoritosIniciales);
@@ -56,6 +66,12 @@ export function AppEstadoProvider({ children }: { children: ReactNode }) {
     useState<Solicitud[]>(solicitudesIniciales);
   // Último número usado: no se repite aunque se eliminen solicitudes.
   const ultimoNumero = useRef(solicitudesIniciales.length);
+
+  const cambiarPreferencia = useCallback(
+    (clave: keyof Preferencias, valor: boolean) =>
+      setPreferencias(p => ({ ...p, [clave]: valor })),
+    [],
+  );
 
   const obtenerMascota = useCallback(
     (id: string) => mascotas.find(m => m.id === id),
@@ -103,6 +119,8 @@ export function AppEstadoProvider({ children }: { children: ReactNode }) {
   const valor = useMemo<AppEstado>(
     () => ({
       usuario,
+      preferencias,
+      cambiarPreferencia,
       mascotas,
       obtenerMascota,
       busqueda,
@@ -120,6 +138,8 @@ export function AppEstadoProvider({ children }: { children: ReactNode }) {
     }),
     [
       usuario,
+      preferencias,
+      cambiarPreferencia,
       mascotas,
       obtenerMascota,
       busqueda,

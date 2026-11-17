@@ -4,14 +4,15 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppEstadoProvider } from './src/estado/AppEstado';
 import { NavProvider, useNav } from './src/navegacion';
 import AdoptarScreen from './src/screens/AdoptarScreen';
+import ConfiguracionScreen from './src/screens/ConfiguracionScreen';
 import DetalleScreen from './src/screens/DetalleScreen';
-import EnConstruccionScreen from './src/screens/EnConstruccionScreen';
 import FavoritosScreen from './src/screens/FavoritosScreen';
 import FiltrosScreen from './src/screens/FiltrosScreen';
 import FormAdopcionScreen from './src/screens/FormAdopcionScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import MascotasScreen from './src/screens/MascotasScreen';
 import OlvidoScreen from './src/screens/OlvidoScreen';
+import PerfilScreen from './src/screens/PerfilScreen';
 import PrincipalScreen from './src/screens/PrincipalScreen';
 import RegistroScreen from './src/screens/RegistroScreen';
 import SolicitudesScreen from './src/screens/SolicitudesScreen';
@@ -69,7 +70,9 @@ function Navegador() {
       return <SolicitudesScreen key={key} />;
     case 'favoritos':
       return <FavoritosScreen key={key} />;
-    default:
-      return <EnConstruccionScreen key={key} ruta={ruta} />;
+    case 'perfil':
+      return <PerfilScreen key={key} />;
+    case 'configuracion':
+      return <ConfiguracionScreen key={key} />;
   }
 }
