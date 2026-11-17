@@ -8,6 +8,7 @@ type Props = {
   onVolver?: () => void; // por defecto, regresa a la pantalla anterior
   mostrarVolver?: boolean;
   derecha?: ReactNode; // acción a la derecha ("Limpiar", foto, etc.)
+  insignia?: number; // contador junto al título (ej.: Favoritos 2)
 };
 
 /** Barra superior con flecha ← y título, como en el prototipo. */
@@ -16,6 +17,7 @@ export default function Encabezado({
   onVolver,
   mostrarVolver = true,
   derecha,
+  insignia,
 }: Props) {
   const { volver } = useNav();
   return (
@@ -30,9 +32,19 @@ export default function Encabezado({
           <Text style={styles.flecha}>←</Text>
         </Pressable>
       ) : null}
-      <Text style={styles.titulo} numberOfLines={1} accessibilityRole="header">
-        {titulo}
-      </Text>
+      <View style={styles.centro}>
+        <Text
+          style={styles.titulo}
+          numberOfLines={1}
+          accessibilityRole="header">
+          {titulo}
+        </Text>
+        {insignia !== undefined ? (
+          <View style={styles.insignia}>
+            <Text style={styles.insigniaTexto}>{insignia}</Text>
+          </View>
+        ) : null}
+      </View>
       {derecha ? <View style={styles.derecha}>{derecha}</View> : null}
     </View>
   );
@@ -52,12 +64,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   flecha: { fontSize: 24, color: colores.texto, marginTop: -2 },
-  titulo: {
+  centro: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginLeft: 4,
+  },
+  titulo: {
+    flexShrink: 1,
     fontSize: 19,
     fontWeight: '800',
     color: colores.texto,
-    marginLeft: 4,
   },
+  insignia: {
+    minWidth: 24,
+    height: 22,
+    borderRadius: 11,
+    paddingHorizontal: 7,
+    backgroundColor: colores.acentoClaro,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  insigniaTexto: { fontSize: 12.5, fontWeight: '800', color: '#B5560E' },
   derecha: { marginRight: 8 },
 });

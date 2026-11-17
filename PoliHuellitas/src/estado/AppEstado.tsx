@@ -15,6 +15,7 @@ import {
   solicitudesIniciales,
 } from '../data/solicitudes';
 import { Usuario, usuarioInicial } from '../data/usuario';
+import { Filtros, filtrosVacios } from '../utils/filtros';
 
 type AppEstado = {
   usuario: Usuario;
@@ -22,6 +23,13 @@ type AppEstado = {
   // Catálogo de mascotas (solo lectura: el estudiante no las administra)
   mascotas: Mascota[];
   obtenerMascota: (id: string) => Mascota | undefined;
+
+  // Búsqueda y filtros de la pantalla Adoptar (aquí para no perderlos al
+  // abrir la pantalla de Filtros y volver)
+  busqueda: string;
+  setBusqueda: (texto: string) => void;
+  filtros: Filtros;
+  setFiltros: (filtros: Filtros) => void;
 
   // Favoritos
   favoritos: string[];
@@ -41,6 +49,8 @@ const AppEstadoContext = createContext<AppEstado | null>(null);
 export function AppEstadoProvider({ children }: { children: ReactNode }) {
   const [usuario] = useState<Usuario>(usuarioInicial);
   const [mascotas] = useState<Mascota[]>(mascotasIniciales);
+  const [busqueda, setBusqueda] = useState('');
+  const [filtros, setFiltros] = useState<Filtros>(filtrosVacios);
   const [favoritos, setFavoritos] = useState<string[]>(favoritosIniciales);
   const [solicitudes, setSolicitudes] =
     useState<Solicitud[]>(solicitudesIniciales);
@@ -95,6 +105,10 @@ export function AppEstadoProvider({ children }: { children: ReactNode }) {
       usuario,
       mascotas,
       obtenerMascota,
+      busqueda,
+      setBusqueda,
+      filtros,
+      setFiltros,
       favoritos,
       esFavorito,
       alternarFavorito,
@@ -108,6 +122,8 @@ export function AppEstadoProvider({ children }: { children: ReactNode }) {
       usuario,
       mascotas,
       obtenerMascota,
+      busqueda,
+      filtros,
       favoritos,
       esFavorito,
       alternarFavorito,

@@ -26,6 +26,7 @@ type Props = {
   opciones: OpcionSelector[];
   onElegir: (valor: string) => void;
   icono?: string;
+  mostrarEtiqueta?: boolean; // false si la tarjeta ya tiene su propio título
 };
 
 /**
@@ -39,6 +40,7 @@ export default function Selector({
   opciones,
   onElegir,
   icono,
+  mostrarEtiqueta = true,
 }: Props) {
   const [abierto, setAbierto] = useState(false);
   const insets = useSafeAreaInsets();
@@ -46,7 +48,7 @@ export default function Selector({
 
   return (
     <View style={styles.contenedor}>
-      <Text style={styles.etiqueta}>{etiqueta}</Text>
+      {mostrarEtiqueta ? <Text style={styles.etiqueta}>{etiqueta}</Text> : null}
       <Pressable
         onPress={() => setAbierto(true)}
         style={styles.caja}

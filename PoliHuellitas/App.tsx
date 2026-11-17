@@ -3,8 +3,11 @@ import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppEstadoProvider } from './src/estado/AppEstado';
 import { NavProvider, useNav } from './src/navegacion';
+import AdoptarScreen from './src/screens/AdoptarScreen';
 import DetalleScreen from './src/screens/DetalleScreen';
 import EnConstruccionScreen from './src/screens/EnConstruccionScreen';
+import FavoritosScreen from './src/screens/FavoritosScreen';
+import FiltrosScreen from './src/screens/FiltrosScreen';
 import FormAdopcionScreen from './src/screens/FormAdopcionScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import MascotasScreen from './src/screens/MascotasScreen';
@@ -58,8 +61,14 @@ function Navegador() {
           solicitudId={ruta.solicitudId}
         />
       );
+    case 'adoptar':
+      return <AdoptarScreen key={key} />;
+    case 'filtros':
+      return <FiltrosScreen key={key} />;
     case 'solicitudes':
       return <SolicitudesScreen key={key} />;
+    case 'favoritos':
+      return <FavoritosScreen key={key} />;
     default:
       return <EnConstruccionScreen key={key} ruta={ruta} />;
   }
