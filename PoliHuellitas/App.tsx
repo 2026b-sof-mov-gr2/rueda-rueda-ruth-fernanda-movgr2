@@ -3,10 +3,14 @@ import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppEstadoProvider } from './src/estado/AppEstado';
 import { NavProvider, useNav } from './src/navegacion';
+import DetalleScreen from './src/screens/DetalleScreen';
 import EnConstruccionScreen from './src/screens/EnConstruccionScreen';
-import ListadoScreen from './src/screens/ListadoScreen';
+import FormAdopcionScreen from './src/screens/FormAdopcionScreen';
+import FormMascotaScreen from './src/screens/FormMascotaScreen';
 import LoginScreen from './src/screens/LoginScreen';
+import MascotasScreen from './src/screens/MascotasScreen';
 import OlvidoScreen from './src/screens/OlvidoScreen';
+import PrincipalScreen from './src/screens/PrincipalScreen';
 import RegistroScreen from './src/screens/RegistroScreen';
 import SplashScreen from './src/screens/SplashScreen';
 
@@ -40,8 +44,16 @@ function Navegador() {
       return <OlvidoScreen key={key} />;
     case 'registro':
       return <RegistroScreen key={key} />;
+    case 'principal':
+      return <PrincipalScreen key={key} />;
     case 'mascotas':
-      return <ListadoScreen key={key} />;
+      return <MascotasScreen key={key} />;
+    case 'formMascota':
+      return <FormMascotaScreen key={key} id={ruta.id} />;
+    case 'detalle':
+      return <DetalleScreen key={key} id={ruta.id} />;
+    case 'formAdopcion':
+      return <FormAdopcionScreen key={key} id={ruta.id} />;
     default:
       return <EnConstruccionScreen key={key} ruta={ruta} />;
   }

@@ -1,5 +1,12 @@
 import React, { ReactNode } from 'react';
-import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { Edge, SafeAreaView } from 'react-native-safe-area-context';
 import { Tab } from '../navegacion';
 import { colores } from '../theme';
@@ -36,6 +43,13 @@ export default function Pantalla({
     <SafeAreaView
       style={[styles.raiz, { backgroundColor: fondo }]}
       edges={bordes}>
+      {/* Con edge-to-edge Android no encoge la ventana al abrir el teclado;
+          KeyboardAvoidingView sube el contenido para que no quede tapado.
+          En pantallas con barra inferior se desactiva para que la barra no suba. */}
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior="padding"
+        enabled={!tabActiva}>
       {encabezado}
       {scroll ? (
         <ScrollView
@@ -49,6 +63,7 @@ export default function Pantalla({
         <View style={[styles.flex, contenidoStyle]}>{children}</View>
       )}
       {pie ? <View style={styles.pie}>{pie}</View> : null}
+      </KeyboardAvoidingView>
       {tabActiva ? <BarraInferior activa={tabActiva} /> : null}
     </SafeAreaView>
   );

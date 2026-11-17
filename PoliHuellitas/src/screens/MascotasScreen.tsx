@@ -1,7 +1,5 @@
-// Listado provisional conectado al contexto. En el bloque 3 se convierte en
-// la pantalla 6 "Mascotas – Ver todas" con el CRUD completo.
 import React, { useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import ConfirmarModal from '../components/ConfirmarModal';
 import Encabezado from '../components/Encabezado';
 import MascotaCard from '../components/MascotaCard';
@@ -12,7 +10,11 @@ import { useNav } from '../navegacion';
 import { colores } from '../theme';
 import { mostrarToast } from '../utils/toast';
 
-export default function ListadoScreen() {
+/**
+ * Pantalla 6: Mascotas – Ver todas (CRUD).
+ * Tap → editar (Update) · FAB → nueva (Create) · 🗑 o long press → eliminar (Delete).
+ */
+export default function MascotasScreen() {
   const { mascotas, eliminarMascota } = useAppEstado();
   const { ir } = useNav();
   const [aEliminar, setAEliminar] = useState<Mascota | null>(null);
@@ -20,7 +22,7 @@ export default function ListadoScreen() {
   const confirmarEliminar = () => {
     if (aEliminar) {
       eliminarMascota(aEliminar.id);
-      mostrarToast(`${aEliminar.nombre} fue eliminado`);
+      mostrarToast(`${aEliminar.nombre} fue eliminado con éxito`);
     }
     setAEliminar(null);
   };
@@ -45,7 +47,11 @@ export default function ListadoScreen() {
           />
         )}
         ListEmptyComponent={
-          <Text style={styles.vacio}>No hay mascotas registradas</Text>
+          <View style={styles.vacio}>
+            <Text style={styles.vacioIcono}>🐾</Text>
+            <Text style={styles.vacioTexto}>No hay mascotas registradas</Text>
+            <Text style={styles.vacioAyuda}>Toca + para agregar una</Text>
+          </View>
         }
       />
 
@@ -62,7 +68,7 @@ export default function ListadoScreen() {
         visible={aEliminar !== null}
         peligro
         titulo={`¿Eliminar a ${aEliminar?.nombre ?? ''}?`}
-        mensaje="Se quitará de la lista de mascotas en adopción."
+        mensaje="Se quitará de la lista de mascotas en adopción. Esta acción no se puede deshacer."
         textoConfirmar="Eliminar"
         onCancelar={() => setAEliminar(null)}
         onConfirmar={confirmarEliminar}
@@ -72,9 +78,12 @@ export default function ListadoScreen() {
 }
 
 const styles = StyleSheet.create({
-  fila: { justifyContent: 'space-between', marginBottom: 12 },
+  fila: { justifyContent: 'space-between', marginBottom: 14 },
   lista: { paddingHorizontal: 16, paddingTop: 4, paddingBottom: 100 },
-  vacio: { textAlign: 'center', color: colores.textoSecundario, marginTop: 40 },
+  vacio: { alignItems: 'center', marginTop: 60, gap: 6 },
+  vacioIcono: { fontSize: 48 },
+  vacioTexto: { fontSize: 16, fontWeight: '700', color: colores.texto },
+  vacioAyuda: { fontSize: 14, color: colores.textoSecundario },
   fab: {
     position: 'absolute',
     right: 20,
