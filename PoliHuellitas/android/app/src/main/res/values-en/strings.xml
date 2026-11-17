@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Portrait – Inglés -->
+    <string name="desafio_texto">Adopt, don\'t shop</string>
+    <string name="desafio_subtitulo">Meet the poliperros looking for a home</string>
+    <string name="desafio_carpeta" translatable="false">res/values-en</string>
+</resources>

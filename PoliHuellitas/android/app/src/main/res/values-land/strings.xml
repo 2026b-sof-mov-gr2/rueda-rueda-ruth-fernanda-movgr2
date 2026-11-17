@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Landscape – Español. El subtítulo no se define aquí: Android lo toma de values/ -->
+    <string name="desafio_texto">Adopta en horizontal</string>
+    <string name="desafio_carpeta" translatable="false">res/values-land</string>
+</resources>

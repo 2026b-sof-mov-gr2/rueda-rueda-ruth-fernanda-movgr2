@@ -15,6 +15,11 @@ export type Solicitud = {
 // Lo que el usuario llena en el formulario (el resto lo pone la app).
 export type DatosSolicitud = Omit<Solicitud, 'id' | 'numero' | 'estado'>;
 
+/** Las solicitudes en revisión o aprobadas no se pueden eliminar; solo las rechazadas. */
+export function sePuedeEliminar(s: Solicitud): boolean {
+  return s.estado === 'rechazada';
+}
+
 export const solicitudesIniciales: Solicitud[] = [
   {
     id: 's1',

@@ -10,7 +10,11 @@ import {
 import ConfirmarModal from '../components/ConfirmarModal';
 import Encabezado from '../components/Encabezado';
 import Pantalla from '../components/Pantalla';
-import { EstadoSolicitud, Solicitud } from '../data/solicitudes';
+import {
+  EstadoSolicitud,
+  sePuedeEliminar,
+  Solicitud,
+} from '../data/solicitudes';
 import { useAppEstado } from '../estado/AppEstado';
 import { useNav } from '../navegacion';
 import { colores, radios } from '../theme';
@@ -27,7 +31,8 @@ const chips: Record<
 
 /**
  * Pantalla 12: Mis solicitudes (Mock-CRUD).
- * Tap → editar (Update) · FAB → nueva (Create) · 🗑 o long press → cancelar (Delete).
+ * Tap → editar (Update) · FAB → nueva (Create) · 🗑 o long press → eliminar (Delete).
+ * Solo las solicitudes rechazadas se pueden eliminar.
  */
 export default function SolicitudesScreen() {
   const { solicitudes, obtenerMascota, eliminarSolicitud } = useAppEstado();
@@ -37,10 +42,23 @@ export default function SolicitudesScreen() {
     ? obtenerMascota(aCancelar.mascotaId)?.nombre ?? 'esta mascota'
     : '';
 
+  // Long press o 🗑: solo las rechazadas abren la confirmación.
+  const pedirEliminar = (s: Solicitud) => {
+    if (sePuedeEliminar(s)) {
+      setACancelar(s);
+    } else {
+      mostrarToast(
+        s.estado === 'aprobada'
+          ? 'Las solicitudes aprobadas no se pueden eliminar'
+          : 'Las solicitudes en revisión no se pueden eliminar',
+      );
+    }
+  };
+
   const confirmarCancelar = () => {
     if (aCancelar) {
       eliminarSolicitud(aCancelar.id);
-      mostrarToast('Solicitud cancelada');
+      mostrarToast('Solicitud eliminada');
     }
     setACancelar(null);
   };
@@ -67,11 +85,11 @@ export default function SolicitudesScreen() {
               onPress={() =>
                 ir({ nombre: 'formAdopcion', solicitudId: item.id })
               }
-              onLongPress={() => setACancelar(item)}
+              onLongPress={() => pedirEliminar(item)}
               android_ripple={{ color: colores.primarioClaro }}
               style={styles.tarjeta}
               accessibilityRole="button"
-              accessibilityLabel={`Solicitud ${item.numero}, ${nombre}, ${chip.texto}. Toca para editar, mantén presionado para cancelar.`}>
+              accessibilityLabel={`Solicitud ${item.numero}, ${nombre}, ${chip.texto}. Toca para editar.`}>
               {mascota?.imagen ? (
                 <Image source={mascota.imagen} style={styles.foto} />
               ) : (
@@ -91,14 +109,22 @@ export default function SolicitudesScreen() {
                   </Text>
                 </View>
               </View>
-              <Pressable
-                onPress={() => setACancelar(item)}
-                style={styles.botonEliminar}
-                android_ripple={{ color: colores.peligroClaro, borderless: true }}
-                accessibilityRole="button"
-                accessibilityLabel={`Cancelar solicitud de ${nombre}`}>
-                <Text style={styles.iconoEliminar}>🗑</Text>
-              </Pressable>
+              {/* El 🗑 solo aparece en las solicitudes que se pueden eliminar */}
+              {sePuedeEliminar(item) ? (
+                <Pressable
+                  onPress={() => pedirEliminar(item)}
+                  style={styles.botonEliminar}
+                  android_ripple={{
+                    color: colores.peligroClaro,
+                    borderless: true,
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Eliminar solicitud de ${nombre}`}>
+                  <Text style={styles.iconoEliminar}>🗑</Text>
+                </Pressable>
+              ) : (
+                <Text style={styles.chevron}>›</Text>
+              )}
             </Pressable>
           );
         }}
@@ -125,10 +151,10 @@ export default function SolicitudesScreen() {
       <ConfirmarModal
         visible={aCancelar !== null}
         peligro
-        titulo={`¿Cancelar tu solicitud para adoptar a ${nombreACancelar}?`}
-        mensaje="La solicitud se eliminará y el club dejará de revisarla."
+        titulo={`¿Eliminar tu solicitud para adoptar a ${nombreACancelar}?`}
+        mensaje="Esta solicitud fue rechazada. Se quitará de tu lista y no podrás recuperarla."
         textoCancelar="Volver"
-        textoConfirmar="Sí, cancelar"
+        textoConfirmar="Sí, eliminar"
         onCancelar={() => setACancelar(null)}
         onConfirmar={confirmarCancelar}
       />
@@ -175,6 +201,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iconoEliminar: { fontSize: 20 },
+  chevron: {
+    width: 48,
+    textAlign: 'center',
+    fontSize: 24,
+    color: colores.textoSecundario,
+  },
   vacio: { alignItems: 'center', marginTop: 80, gap: 6, paddingHorizontal: 24 },
   vacioIcono: { fontSize: 52 },
   vacioTexto: { fontSize: 17, fontWeight: '800', color: colores.texto },

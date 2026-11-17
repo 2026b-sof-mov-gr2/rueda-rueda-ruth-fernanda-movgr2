@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Landscape – Inglés. El subtítulo no se define aquí: Android lo toma de values-en/ -->
+    <string name="desafio_texto">Adopt in landscape</string>
+    <string name="desafio_carpeta" translatable="false">res/values-en-land</string>
+</resources>

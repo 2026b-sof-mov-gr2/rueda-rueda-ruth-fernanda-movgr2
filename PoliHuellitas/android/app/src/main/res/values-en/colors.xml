@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Portrait – Inglés -->
+    <color name="desafio_fuente">#FFFFFF</color>
+    <color name="desafio_fondo">#00769A</color>
+</resources>

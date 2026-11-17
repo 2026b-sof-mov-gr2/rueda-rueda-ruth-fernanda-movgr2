@@ -1,5 +1,6 @@
 import React from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import BannerDesafio from '../components/BannerDesafio';
 import Carrusel from '../components/Carrusel';
 import { Logo, TextoMarca } from '../components/Marca';
 import Pantalla from '../components/Pantalla';
@@ -8,14 +9,6 @@ import { useAlternarFavorito } from '../estado/useFavorito';
 import { useNav } from '../navegacion';
 import { colores } from '../theme';
 import { mostrarToast } from '../utils/toast';
-
-// TODO bloque 6: el texto y los colores del banner vendrán del Native Module
-// (recursos values / values-en / values-land / values-en-land).
-const banner = {
-  texto: 'Adopta, no compres',
-  colorFuente: '#FFFFFF',
-  colorFondo: colores.primario,
-};
 
 // Reemplaza estos enlaces por las cuentas reales del club PoliPerros.
 const redes = [
@@ -45,18 +38,8 @@ export default function PrincipalScreen() {
         <TextoMarca tamano={24} />
       </View>
 
-      {/* Banner del desafío de recursos nativos */}
-      <View style={[styles.banner, { backgroundColor: banner.colorFondo }]}>
-        <View style={styles.bannerTextos}>
-          <Text style={[styles.bannerTitulo, { color: banner.colorFuente }]}>
-            {banner.texto}
-          </Text>
-          <Text style={[styles.bannerSub, { color: banner.colorFuente }]}>
-            Conoce a los poliperros que buscan hogar
-          </Text>
-        </View>
-        <LogoPoliPerros />
-      </View>
+      {/* Banner del desafío: texto y colores desde los recursos de Android */}
+      <BannerDesafio />
 
       <View style={styles.seccion}>
         <Text style={styles.seccionTitulo} accessibilityRole="header">
@@ -101,19 +84,6 @@ export default function PrincipalScreen() {
   );
 }
 
-/**
- * Marcador del logo de PoliPerros. Cuando exista src/assets/logo_poliperros.png
- * se reemplaza por <Image source={require('../assets/logo_poliperros.png')} />.
- */
-function LogoPoliPerros() {
-  return (
-    <View style={styles.logoPP} accessibilityLabel="Logo de PoliPerros">
-      <Text style={styles.logoPPPoli}>POLI</Text>
-      <Text style={styles.logoPPPerros}>PERROS</Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   contenido: { paddingHorizontal: 0, paddingTop: 8 },
   cabecera: {
@@ -122,35 +92,6 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingHorizontal: 20,
     marginBottom: 16,
-  },
-  banner: {
-    marginHorizontal: 20,
-    borderRadius: 22,
-    padding: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    elevation: 2,
-  },
-  bannerTextos: { flex: 1, gap: 6 },
-  bannerTitulo: { fontSize: 24, lineHeight: 29, fontWeight: '800' },
-  bannerSub: { fontSize: 13.5, lineHeight: 19, opacity: 0.9 },
-  logoPP: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    backgroundColor: colores.acento,
-    borderWidth: 3,
-    borderColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoPPPoli: { fontSize: 20, fontWeight: '900', color: '#FFFFFF' },
-  logoPPPerros: {
-    fontSize: 17,
-    fontWeight: '900',
-    color: colores.primario,
-    marginTop: -4,
   },
   seccion: {
     flexDirection: 'row',

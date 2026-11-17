@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">PoliHuellitas</string>
+    <string name="app_name" translatable="false">PoliHuellitas</string>
+
+    <!-- Desafío de recursos nativos: Portrait – Español (recurso por defecto) -->
+    <string name="desafio_texto">Adopta, no compres</string>
+    <string name="desafio_subtitulo">Conoce a los poliperros que buscan hogar</string>
+    <string name="desafio_carpeta" translatable="false">res/values</string>
 </resources>

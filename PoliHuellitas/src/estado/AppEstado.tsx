@@ -11,6 +11,7 @@ import { Mascota, mascotasIniciales } from '../data/mascotas';
 import {
   DatosSolicitud,
   favoritosIniciales,
+  sePuedeEliminar,
   Solicitud,
   solicitudesIniciales,
 } from '../data/solicitudes';
@@ -113,7 +114,10 @@ export function AppEstadoProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const eliminarSolicitud = useCallback((id: string) => {
-    setSolicitudes(lista => lista.filter(s => s.id !== id));
+    // Protección extra: nunca se eliminan solicitudes en revisión o aprobadas.
+    setSolicitudes(lista =>
+      lista.filter(s => s.id !== id || !sePuedeEliminar(s)),
+    );
   }, []);
 
   const valor = useMemo<AppEstado>(

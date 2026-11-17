@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Landscape – Inglés -->
+    <color name="desafio_fuente">#FFFFFF</color>
+    <color name="desafio_fondo">#B5560E</color>
+</resources>
