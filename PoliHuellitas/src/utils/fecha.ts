@@ -35,6 +35,17 @@ export function esFechaValida(texto: string): boolean {
   return fecha !== null && fecha.getTime() <= Date.now();
 }
 
+/** true si la fecha existe y es hoy o más adelante (para agendar visitas). */
+export function esHoyOFutura(texto: string): boolean {
+  const fecha = parsearFecha(texto);
+  if (!fecha) {
+    return false;
+  }
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  return fecha.getTime() >= hoy.getTime();
+}
+
 /** Fecha de hoy como "DD/MM/AAAA". */
 export function hoyComoTexto(): string {
   const h = new Date();

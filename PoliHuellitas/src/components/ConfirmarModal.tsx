@@ -8,6 +8,7 @@ type Props = {
   titulo: string;
   mensaje: string;
   textoConfirmar?: string;
+  textoCancelar?: string;
   icono?: string;
   peligro?: boolean; // botón rojo para acciones destructivas
   onConfirmar: () => void;
@@ -20,6 +21,7 @@ export default function ConfirmarModal({
   titulo,
   mensaje,
   textoConfirmar = 'Confirmar',
+  textoCancelar = 'Cancelar',
   icono,
   peligro = false,
   onConfirmar,
@@ -54,7 +56,7 @@ export default function ConfirmarModal({
           <Text style={styles.mensaje}>{mensaje}</Text>
           <View style={styles.botones}>
             <Boton
-              titulo="Cancelar"
+              titulo={textoCancelar}
               variante="texto"
               onPress={onCancelar}
               style={styles.boton}

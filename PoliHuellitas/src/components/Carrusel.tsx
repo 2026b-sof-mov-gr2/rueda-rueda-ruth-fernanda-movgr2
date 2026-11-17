@@ -102,10 +102,9 @@ export default function Carrusel({
                 <MascotaCard
                   key={m.id}
                   mascota={m}
-                  accion="favorito"
                   esFavorito={esFavorito(m.id)}
                   onPress={() => onAbrir(m)}
-                  onAccion={() => onFavorito(m)}
+                  onFavorito={() => onFavorito(m)}
                   alturaFoto={ALTURA_FOTO}
                   style={{ width: anchoTarjeta }}
                 />

@@ -13,15 +13,15 @@ import Boton from '../components/Boton';
 import Encabezado from '../components/Encabezado';
 import Pantalla from '../components/Pantalla';
 import { useAppEstado } from '../estado/AppEstado';
+import { useAlternarFavorito } from '../estado/useFavorito';
 import { useNav } from '../navegacion';
 import { colores, radios } from '../theme';
 import { haceCuanto } from '../utils/fecha';
-import { mostrarToast } from '../utils/toast';
 
 /** Pantalla 8: Detalle de mascota. */
 export default function DetalleScreen({ id }: { id: string }) {
-  const { obtenerMascota, esFavorito, alternarFavorito, solicitudes } =
-    useAppEstado();
+  const { obtenerMascota, esFavorito, solicitudes } = useAppEstado();
+  const alternarFavorito = useAlternarFavorito();
   const { ir, volver } = useNav();
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
@@ -38,11 +38,6 @@ export default function DetalleScreen({ id }: { id: string }) {
   const favorito = esFavorito(mascota.id);
   const yaSolicitada = solicitudes.some(s => s.mascotaId === mascota.id);
   const altoFoto = Math.max(height * 0.42, 220);
-
-  const tocarFavorito = () => {
-    mostrarToast(favorito ? 'Quitado de favoritos' : 'Agregado a favoritos');
-    alternarFavorito(mascota.id);
-  };
 
   const datos = [
     { icono: '🐾', etiqueta: 'Raza', valor: mascota.raza },
@@ -71,7 +66,9 @@ export default function DetalleScreen({ id }: { id: string }) {
             titulo={mascota.disponible ? 'Quiero adoptarlo' : 'No disponible'}
             icono="♡"
             deshabilitado={!mascota.disponible}
-            onPress={() => ir({ nombre: 'formAdopcion', id: mascota.id })}
+            onPress={() =>
+              ir({ nombre: 'formAdopcion', mascotaId: mascota.id })
+            }
           />
         )
       }>
@@ -89,7 +86,7 @@ export default function DetalleScreen({ id }: { id: string }) {
             <BotonRedondo
               texto={favorito ? '♥' : '♡'}
               etiqueta={favorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-              onPress={tocarFavorito}
+              onPress={() => alternarFavorito(mascota)}
               naranja
             />
           </View>

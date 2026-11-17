@@ -6,12 +6,12 @@ import { NavProvider, useNav } from './src/navegacion';
 import DetalleScreen from './src/screens/DetalleScreen';
 import EnConstruccionScreen from './src/screens/EnConstruccionScreen';
 import FormAdopcionScreen from './src/screens/FormAdopcionScreen';
-import FormMascotaScreen from './src/screens/FormMascotaScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import MascotasScreen from './src/screens/MascotasScreen';
 import OlvidoScreen from './src/screens/OlvidoScreen';
 import PrincipalScreen from './src/screens/PrincipalScreen';
 import RegistroScreen from './src/screens/RegistroScreen';
+import SolicitudesScreen from './src/screens/SolicitudesScreen';
 import SplashScreen from './src/screens/SplashScreen';
 
 export default function App() {
@@ -48,12 +48,18 @@ function Navegador() {
       return <PrincipalScreen key={key} />;
     case 'mascotas':
       return <MascotasScreen key={key} />;
-    case 'formMascota':
-      return <FormMascotaScreen key={key} id={ruta.id} />;
     case 'detalle':
       return <DetalleScreen key={key} id={ruta.id} />;
     case 'formAdopcion':
-      return <FormAdopcionScreen key={key} id={ruta.id} />;
+      return (
+        <FormAdopcionScreen
+          key={key}
+          mascotaId={ruta.mascotaId}
+          solicitudId={ruta.solicitudId}
+        />
+      );
+    case 'solicitudes':
+      return <SolicitudesScreen key={key} />;
     default:
       return <EnConstruccionScreen key={key} ruta={ruta} />;
   }

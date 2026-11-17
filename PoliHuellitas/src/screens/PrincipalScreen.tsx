@@ -3,8 +3,8 @@ import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import Carrusel from '../components/Carrusel';
 import { Logo, TextoMarca } from '../components/Marca';
 import Pantalla from '../components/Pantalla';
-import { Mascota } from '../data/mascotas';
 import { useAppEstado } from '../estado/AppEstado';
+import { useAlternarFavorito } from '../estado/useFavorito';
 import { useNav } from '../navegacion';
 import { colores } from '../theme';
 import { mostrarToast } from '../utils/toast';
@@ -28,17 +28,9 @@ const redes = [
 /** Pantalla 5: Principal. */
 export default function PrincipalScreen() {
   const { ir, irATab } = useNav();
-  const { mascotas, esFavorito, alternarFavorito } = useAppEstado();
+  const { mascotas, esFavorito } = useAppEstado();
+  const favorito = useAlternarFavorito();
   const disponibles = mascotas.filter(m => m.disponible);
-
-  const favorito = (m: Mascota) => {
-    mostrarToast(
-      esFavorito(m.id)
-        ? `${m.nombre} quitado de favoritos`
-        : `${m.nombre} agregado a favoritos`,
-    );
-    alternarFavorito(m.id);
-  };
 
   const abrirRed = (url: string, nombre: string) => {
     Linking.openURL(url).catch(() =>

@@ -15,37 +15,25 @@ import { haceCuanto } from '../utils/fecha';
 
 type Props = {
   mascota: Mascota;
-  onPress: () => void;
-  onLongPress?: () => void;
-  // Botón redondo arriba a la derecha: 🗑 (CRUD) o corazón (favoritos)
-  accion: 'eliminar' | 'favorito';
-  onAccion: () => void;
-  esFavorito?: boolean;
+  onPress: () => void; // abre el Detalle
+  esFavorito: boolean;
+  onFavorito: () => void; // corazón de la esquina
   alturaFoto?: DimensionValue;
   style?: StyleProp<ViewStyle>;
 };
 
+/** Tarjeta de mascota del catálogo (solo lectura), como en el prototipo. */
 export default function MascotaCard({
   mascota,
   onPress,
-  onLongPress,
-  accion,
-  onAccion,
-  esFavorito = false,
+  esFavorito,
+  onFavorito,
   alturaFoto = 112,
   style,
 }: Props) {
-  const etiquetaAccion =
-    accion === 'eliminar'
-      ? `Eliminar a ${mascota.nombre}`
-      : esFavorito
-      ? `Quitar a ${mascota.nombre} de favoritos`
-      : `Agregar a ${mascota.nombre} a favoritos`;
-
   return (
     <Pressable
       onPress={onPress}
-      onLongPress={onLongPress}
       android_ripple={{ color: colores.primarioClaro }}
       style={[styles.tarjeta, style]}
       accessibilityRole="button"
@@ -59,16 +47,17 @@ export default function MascotaCard({
           </View>
         )}
         <Pressable
-          onPress={onAccion}
+          onPress={onFavorito}
           hitSlop={6}
-          style={styles.botonAccion}
+          style={styles.botonFavorito}
           accessibilityRole="button"
-          accessibilityLabel={etiquetaAccion}>
-          {accion === 'eliminar' ? (
-            <Text style={styles.iconoEliminar}>🗑</Text>
-          ) : (
-            <Text style={styles.corazon}>{esFavorito ? '♥' : '♡'}</Text>
-          )}
+          accessibilityState={{ selected: esFavorito }}
+          accessibilityLabel={
+            esFavorito
+              ? `Quitar a ${mascota.nombre} de favoritos`
+              : `Agregar a ${mascota.nombre} a favoritos`
+          }>
+          <Text style={styles.corazon}>{esFavorito ? '♥' : '♡'}</Text>
         </Pressable>
       </View>
 
@@ -103,7 +92,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   sinFotoTexto: { fontSize: 36 },
-  botonAccion: {
+  botonFavorito: {
     position: 'absolute',
     top: 8,
     right: 8,
@@ -115,7 +104,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     elevation: 2,
   },
-  iconoEliminar: { fontSize: 16 },
   corazon: { fontSize: 20, color: colores.acento, marginTop: -2 },
   info: { paddingHorizontal: 12, paddingTop: 10, paddingBottom: 12, gap: 3 },
   filaNombre: {

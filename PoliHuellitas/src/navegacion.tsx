@@ -20,9 +20,12 @@ export type Ruta =
   | { nombre: 'registro' }
   | { nombre: 'principal' }
   | { nombre: 'mascotas' }
-  | { nombre: 'formMascota'; id?: string } // sin id = Create, con id = Update
   | { nombre: 'detalle'; id: string }
-  | { nombre: 'formAdopcion'; id: string }
+  // Formulario de adopción:
+  //  - con solicitudId            → Update (editar solicitud)
+  //  - con mascotaId              → Create desde "Quiero adoptarlo"
+  //  - sin nada                   → Create desde el FAB (elige la mascota)
+  | { nombre: 'formAdopcion'; mascotaId?: string; solicitudId?: string }
   | { nombre: 'adoptar' }
   | { nombre: 'filtros' }
   | { nombre: 'solicitudes' }

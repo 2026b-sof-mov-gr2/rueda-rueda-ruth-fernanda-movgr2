@@ -4,69 +4,53 @@ import React, {
   useCallback,
   useContext,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { Mascota, mascotasIniciales } from '../data/mascotas';
 import {
+  DatosSolicitud,
   favoritosIniciales,
   Solicitud,
   solicitudesIniciales,
 } from '../data/solicitudes';
 import { Usuario, usuarioInicial } from '../data/usuario';
 
-export type DatosMascota = Omit<Mascota, 'id'>;
-
 type AppEstado = {
   usuario: Usuario;
 
-  // CRUD de mascotas
+  // Catálogo de mascotas (solo lectura: el estudiante no las administra)
   mascotas: Mascota[];
   obtenerMascota: (id: string) => Mascota | undefined;
-  crearMascota: (datos: DatosMascota) => Mascota;
-  actualizarMascota: (mascota: Mascota) => void;
-  eliminarMascota: (id: string) => void;
 
   // Favoritos
   favoritos: string[];
   esFavorito: (id: string) => boolean;
   alternarFavorito: (id: string) => void;
 
-  // Solicitudes de adopción
+  // Mock-CRUD: solicitudes de adopción del usuario
   solicitudes: Solicitud[];
-  crearSolicitud: (mascotaId: string, motivo: string) => Solicitud;
+  obtenerSolicitud: (id: string) => Solicitud | undefined;
+  crearSolicitud: (datos: DatosSolicitud) => Solicitud;
+  editarSolicitud: (id: string, datos: DatosSolicitud) => void;
+  eliminarSolicitud: (id: string) => void;
 };
 
 const AppEstadoContext = createContext<AppEstado | null>(null);
 
-let contadorId = 100; // ids para las mascotas nuevas
-
 export function AppEstadoProvider({ children }: { children: ReactNode }) {
   const [usuario] = useState<Usuario>(usuarioInicial);
-  const [mascotas, setMascotas] = useState<Mascota[]>(mascotasIniciales);
+  const [mascotas] = useState<Mascota[]>(mascotasIniciales);
   const [favoritos, setFavoritos] = useState<string[]>(favoritosIniciales);
   const [solicitudes, setSolicitudes] =
     useState<Solicitud[]>(solicitudesIniciales);
+  // Último número usado: no se repite aunque se eliminen solicitudes.
+  const ultimoNumero = useRef(solicitudesIniciales.length);
 
   const obtenerMascota = useCallback(
     (id: string) => mascotas.find(m => m.id === id),
     [mascotas],
   );
-
-  const crearMascota = useCallback((datos: DatosMascota) => {
-    contadorId += 1;
-    const nueva: Mascota = { ...datos, id: String(contadorId) };
-    setMascotas(lista => [nueva, ...lista]);
-    return nueva;
-  }, []);
-
-  const actualizarMascota = useCallback((mascota: Mascota) => {
-    setMascotas(lista => lista.map(m => (m.id === mascota.id ? mascota : m)));
-  }, []);
-
-  const eliminarMascota = useCallback((id: string) => {
-    setMascotas(lista => lista.filter(m => m.id !== id));
-    setFavoritos(lista => lista.filter(f => f !== id));
-  }, []);
 
   const esFavorito = useCallback(
     (id: string) => favoritos.includes(id),
@@ -79,48 +63,59 @@ export function AppEstadoProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
-  const crearSolicitud = useCallback(
-    (mascotaId: string, motivo: string) => {
-      const numero = String(solicitudes.length + 1).padStart(3, '0');
-      const nueva: Solicitud = {
-        id: `s${Date.now()}`,
-        numero,
-        mascotaId,
-        estado: 'revision',
-        motivo,
-      };
-      setSolicitudes(lista => [...lista, nueva]);
-      return nueva;
-    },
-    [solicitudes.length],
+  const obtenerSolicitud = useCallback(
+    (id: string) => solicitudes.find(s => s.id === id),
+    [solicitudes],
   );
+
+  const crearSolicitud = useCallback((datos: DatosSolicitud) => {
+    ultimoNumero.current += 1;
+    const nueva: Solicitud = {
+      ...datos,
+      id: `s${Date.now()}`,
+      numero: String(ultimoNumero.current).padStart(3, '0'),
+      estado: 'revision', // toda solicitud nueva empieza "En revisión"
+    };
+    setSolicitudes(lista => [...lista, nueva]);
+    return nueva;
+  }, []);
+
+  const editarSolicitud = useCallback((id: string, datos: DatosSolicitud) => {
+    setSolicitudes(lista =>
+      lista.map(s => (s.id === id ? { ...s, ...datos } : s)),
+    );
+  }, []);
+
+  const eliminarSolicitud = useCallback((id: string) => {
+    setSolicitudes(lista => lista.filter(s => s.id !== id));
+  }, []);
 
   const valor = useMemo<AppEstado>(
     () => ({
       usuario,
       mascotas,
       obtenerMascota,
-      crearMascota,
-      actualizarMascota,
-      eliminarMascota,
       favoritos,
       esFavorito,
       alternarFavorito,
       solicitudes,
+      obtenerSolicitud,
       crearSolicitud,
+      editarSolicitud,
+      eliminarSolicitud,
     }),
     [
       usuario,
       mascotas,
       obtenerMascota,
-      crearMascota,
-      actualizarMascota,
-      eliminarMascota,
       favoritos,
       esFavorito,
       alternarFavorito,
       solicitudes,
+      obtenerSolicitud,
       crearSolicitud,
+      editarSolicitud,
+      eliminarSolicitud,
     ],
   );
 
