@@ -5,6 +5,10 @@ import { AppEstadoProvider } from './src/estado/AppEstado';
 import { NavProvider, useNav } from './src/navegacion';
 import EnConstruccionScreen from './src/screens/EnConstruccionScreen';
 import ListadoScreen from './src/screens/ListadoScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import OlvidoScreen from './src/screens/OlvidoScreen';
+import RegistroScreen from './src/screens/RegistroScreen';
+import SplashScreen from './src/screens/SplashScreen';
 
 export default function App() {
   return (
@@ -12,8 +16,7 @@ export default function App() {
       <StatusBar barStyle="dark-content" />
       {/* El estado vive en la raíz: sobrevive a rotaciones y cambios de pantalla */}
       <AppEstadoProvider>
-        {/* TODO bloque 2: la pantalla inicial será { nombre: 'splash' } */}
-        <NavProvider inicial={{ nombre: 'principal' }}>
+        <NavProvider inicial={{ nombre: 'splash' }}>
           <Navegador />
         </NavProvider>
       </AppEstadoProvider>
@@ -29,6 +32,14 @@ function Navegador() {
   const key = `${pila.length}-${ruta.nombre}`;
 
   switch (ruta.nombre) {
+    case 'splash':
+      return <SplashScreen key={key} />;
+    case 'login':
+      return <LoginScreen key={key} />;
+    case 'olvido':
+      return <OlvidoScreen key={key} />;
+    case 'registro':
+      return <RegistroScreen key={key} />;
     case 'mascotas':
       return <ListadoScreen key={key} />;
     default:

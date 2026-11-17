@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   Pressable,
   StyleProp,
@@ -14,7 +14,7 @@ type Props = {
   titulo: string;
   onPress: () => void;
   variante?: Variante;
-  icono?: string; // emoji opcional antes del texto
+  icono?: ReactNode; // emoji o elemento opcional antes del texto
   deshabilitado?: boolean;
   style?: StyleProp<ViewStyle>;
 };
@@ -71,8 +71,12 @@ export default function Boton({
         deshabilitado && styles.deshabilitado,
         style,
       ]}>
+      {typeof icono === 'string' ? (
+        <Text style={[styles.texto, { color: v.texto }]}>{icono}</Text>
+      ) : (
+        icono
+      )}
       <Text style={[styles.texto, { color: v.texto }]} numberOfLines={1}>
-        {icono ? `${icono}  ` : ''}
         {titulo}
       </Text>
     </Pressable>
@@ -83,6 +87,8 @@ const styles = StyleSheet.create({
   boton: {
     height: 54,
     borderRadius: radios.boton,
+    flexDirection: 'row',
+    gap: 10,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
